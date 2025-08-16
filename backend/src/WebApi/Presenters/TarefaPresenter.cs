@@ -14,7 +14,7 @@ namespace backend.src.WebApi.Presenters
                 Titulo = tarefa.Titulo,
                 Descricao = tarefa.Descricao,
                 Status = tarefa.Status.ToString(),
-                DataConclusao = tarefa.DataConclusao ?? null
+                DataConclusao = tarefa.DataConclusao?.ToString("dd/MM/yyyy"),
             }).ToList();
         }
         

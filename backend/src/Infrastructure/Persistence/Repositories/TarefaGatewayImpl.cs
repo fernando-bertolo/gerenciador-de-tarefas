@@ -34,7 +34,7 @@ namespace backend.src.Infrastructure.Persistence.Repositories
         {
             return await this._context.Tarefas
                 .AsNoTracking()
-                .Select(e => Tarefa.Criar(e.Id, e.Titulo, e.Descricao, e.Status, e.DataConclusao)).ToListAsync();
+                .Select(e => Tarefa.Criar(e.Id, e.Titulo, e.Descricao, e.Status, e.DataConclusao, e.DataCriacao)).ToListAsync();
         }
 
 
@@ -59,7 +59,7 @@ namespace backend.src.Infrastructure.Persistence.Repositories
 
             if (entity == null) return null;
 
-            return Tarefa.Criar(entity.Id, entity.Titulo, entity.Descricao, entity.Status, entity.DataConclusao);
+            return Tarefa.Criar(entity.Id, entity.Titulo, entity.Descricao, entity.Status, entity.DataConclusao, entity.DataCriacao);
         }
 
         public async Task AtualizarStatus(Tarefa tarefa)

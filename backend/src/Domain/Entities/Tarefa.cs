@@ -17,14 +17,15 @@ namespace backend.src.Domain.Entities
             string titulo,
             string? descricao = null,
             StatusTarefa status = StatusTarefa.Pendente,
-            DateTime? dataConclusao = null
+            DateTime? dataConclusao = null,
+            DateTime? dataCriacao = null
         )
         {
             this.Codigo = codigo;
             this.Titulo = titulo;
             this.Descricao = descricao;
             this.Status = status;
-            this.DataCriacao = DateTime.UtcNow;
+            this.DataCriacao = dataCriacao ?? DateTime.UtcNow;
             this.DataConclusao = dataConclusao;
 
             this.Validacao();
@@ -35,11 +36,12 @@ namespace backend.src.Domain.Entities
             string titulo,
             string? descricao = null,
             StatusTarefa status = StatusTarefa.Pendente,
-            DateTime? dataConclusao = null
+            DateTime? dataConclusao = null,
+            DateTime? dataCriacao = null
         )
         {
             Tarefa.VerificaTitulo(titulo);
-            return new Tarefa(codigo, titulo, descricao, status, dataConclusao);
+            return new Tarefa(codigo, titulo, descricao, status, dataConclusao, dataCriacao);
         }
 
         private void Validacao()
