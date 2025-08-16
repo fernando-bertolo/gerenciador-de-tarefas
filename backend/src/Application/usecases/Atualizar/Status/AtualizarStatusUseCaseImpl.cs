@@ -2,7 +2,7 @@ using backend.src.Application.UseCases.Atualizar;
 using backend.src.Domain.Exceptions;
 using backend.src.Domain.Gateways;
 
-namespace backend.src.Application.UseCases.Atualizar
+namespace backend.src.Application.UseCases.Atualizar.Status
 {
     public class AtualizarStatusUseCaseImpl : IAtualizarStatusUseCase
     {
@@ -15,7 +15,6 @@ namespace backend.src.Application.UseCases.Atualizar
         }
         public async Task Execute(int codigo, AtualizarStatusInput atualizarStatusInput)
         {
-            System.Console.WriteLine("To aqui");
             var tarefa = await this._tarefaGateway.BuscarTarefaPorId(codigo);
 
             if (tarefa == null)
@@ -23,10 +22,7 @@ namespace backend.src.Application.UseCases.Atualizar
                 throw new TarefaNaoEncontradaException("Tarefa não encontrada");
             }
 
-
-            System.Console.WriteLine("To aqui 2");
             tarefa.AtualizarStatus(atualizarStatusInput.Status);
-            System.Console.WriteLine("To aqui 3");
             await this._tarefaGateway.AtualizarStatus(tarefa);
         }
     }

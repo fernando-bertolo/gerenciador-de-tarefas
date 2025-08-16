@@ -1,4 +1,4 @@
-namespace backend.src.Application.UseCases.Atualizar
+namespace backend.src.Application.UseCases.Atualizar.Status
 {
     public interface IAtualizarStatusUseCase
     {

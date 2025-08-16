@@ -73,11 +73,28 @@ namespace backend.src.Infrastructure.Persistence.Repositories
                 tarefa.Status
             );
 
-            _context.Tarefas.Attach(entity); 
+            _context.Tarefas.Attach(entity);
             _context.Entry(entity).Property(e => e.Status).IsModified = true;
             _context.Entry(entity).Property(e => e.DataConclusao).IsModified = true;
-            
+
             await this._context.SaveChangesAsync();
+        }
+
+
+        public async Task AtualizarTarefa(Tarefa tarefa)
+        {
+            var entity = new TarefaEntity(
+                tarefa.Codigo ?? 0,
+                tarefa.Titulo,
+                tarefa.Descricao,
+                tarefa.DataCriacao,
+                tarefa.DataConclusao,
+                tarefa.Status
+            );
+
+            this._context.Update(entity);
+            await this._context.SaveChangesAsync();
+            
         }
     }
 }
