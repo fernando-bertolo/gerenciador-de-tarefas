@@ -61,5 +61,23 @@ namespace backend.src.Infrastructure.Persistence.Repositories
 
             return Tarefa.Criar(entity.Id, entity.Titulo, entity.Descricao, entity.Status, entity.DataConclusao);
         }
+
+        public async Task AtualizarStatus(Tarefa tarefa)
+        {
+            var entity = new TarefaEntity(
+                tarefa.Codigo ?? 0,
+                tarefa.Titulo,
+                tarefa.Descricao,
+                tarefa.DataCriacao,
+                tarefa.DataConclusao,
+                tarefa.Status
+            );
+
+            _context.Tarefas.Attach(entity); 
+            _context.Entry(entity).Property(e => e.Status).IsModified = true;
+            _context.Entry(entity).Property(e => e.DataConclusao).IsModified = true;
+            
+            await this._context.SaveChangesAsync();
+        }
     }
 }

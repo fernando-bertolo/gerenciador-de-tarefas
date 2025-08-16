@@ -62,7 +62,7 @@ namespace backend.src.Domain.Entities
         {
             if (this.Status == StatusTarefa.Concluida && !this.DataConclusao.HasValue)
             {
-                throw new DataConclusaoNullComStatusConcluidoException("Data de conclusão não pode ser nula");
+                throw new DataConclusaoNullComStatusConcluidoException("Data de conclusão não pode ser nula quando o status for concluido");
             }
         }
 
@@ -74,12 +74,25 @@ namespace backend.src.Domain.Entities
             }
         }
 
-
-        public void ConcluirTarefa(DateTime dataConclusao)
+        public void AtualizarInformacoes(string titulo, string? descricao)
         {
-            this.Validacao();
-            this.DataConclusao = dataConclusao;
-            this.Status = StatusTarefa.Concluida;
+            VerificaTitulo(titulo);
+            this.Titulo = titulo;
+            this.Descricao = descricao;
+        }
+
+
+        public void AtualizarStatus(StatusTarefa status)
+        {
+            this.Status = status;
+
+            if (status == StatusTarefa.Concluida)
+            {
+                this.DataConclusao = DateTime.UtcNow;
+                return;
+
+            }
+            this.DataConclusao = null;
         }
     }
 }

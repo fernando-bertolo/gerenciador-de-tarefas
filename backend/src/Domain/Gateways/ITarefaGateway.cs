@@ -8,5 +8,6 @@ namespace backend.src.Domain.Gateways
         Task<List<Tarefa>> ListarTarefas();
         Task RemoverTarefaPorId(Tarefa tarefa);
         Task<Tarefa?> BuscarTarefaPorId(int Id);
+        Task AtualizarStatus(Tarefa tarefa);
     }
 }
