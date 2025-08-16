@@ -14,7 +14,7 @@ namespace backend.src.Application.usecases.criar
 
         public void Execute(CriarTarefaInput input)
         {
-            this._tarefaGateway.CriarTarefa(Tarefa.Criar(input.Titulo, input.Descricao, input.Status, input.DataConclusao));
+            this._tarefaGateway.CriarTarefa(Tarefa.Criar(null, input.Titulo, input.Descricao, input.Status, input.DataConclusao));
         }
     }
 }

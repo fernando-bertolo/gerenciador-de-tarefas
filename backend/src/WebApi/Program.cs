@@ -1,4 +1,5 @@
 using backend.src.Application.usecases.criar;
+using backend.src.Application.usecases.listar;
 using backend.src.Domain.Gateways;
 using backend.src.Infrastructure.Persistence;
 using backend.src.Infrastructure.Persistence.Repositories;
@@ -14,6 +15,7 @@ builder.Services.AddControllers(options =>
     options.Filters.Add<GlobalExceptionFilter>();
 });
 builder.Services.AddScoped<ICriarTarefaUseCase, CriarTarefaUseCaseImpl>();
+builder.Services.AddScoped<IListarTarefasUseCase, ListarTarefasUseCaseImpl>();
 builder.Services.AddScoped<ITarefaGateway, TarefaGatewayImpl>();
 
 var app = builder.Build();

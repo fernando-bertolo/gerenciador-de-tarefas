@@ -18,7 +18,7 @@ namespace backend.src.WebApi.Mappers
             {
                 Titulo = tarefaDTO.Titulo,
                 Descricao = tarefaDTO.Descricao,
-                Status = StatusTarefa.Pendente,
+                Status = (StatusTarefa) tarefaDTO.Status,
                 DataConclusao = tarefaDTO.DataConclusao
             };
         }

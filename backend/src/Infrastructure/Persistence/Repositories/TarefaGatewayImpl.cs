@@ -1,6 +1,8 @@
 using backend.src.Domain.Entities;
 using backend.src.Domain.Gateways;
 using backend.src.Infrastructure.Persistence.Entities;
+using Microsoft.EntityFrameworkCore;
+
 
 namespace backend.src.Infrastructure.Persistence.Repositories
 {
@@ -28,5 +30,11 @@ namespace backend.src.Infrastructure.Persistence.Repositories
             return tarefa;
         }
 
+        public async Task<List<Tarefa>> ListarTarefas()
+        {
+            return await this._context.Tarefas
+                .AsNoTracking()
+                .Select(e => Tarefa.Criar(e.Id, e.Titulo, e.Descricao,  e.Status, e.DataConclusao)).ToListAsync();
+        }
     }
 }

@@ -13,12 +13,14 @@ namespace backend.src.Domain.Entities
         public DateTime? DataConclusao { get; private set; }
 
         private Tarefa(
+            int? codigo,
             string titulo,
             string? descricao = null,
             StatusTarefa status = StatusTarefa.Pendente,
             DateTime? dataConclusao = null
         )
         {
+            this.Codigo = codigo;
             this.Titulo = titulo;
             this.Descricao = descricao;
             this.Status = status;
@@ -29,6 +31,7 @@ namespace backend.src.Domain.Entities
         }
 
         public static Tarefa Criar(
+            int? codigo,
             string titulo,
             string? descricao = null,
             StatusTarefa status = StatusTarefa.Pendente,
@@ -36,7 +39,7 @@ namespace backend.src.Domain.Entities
         )
         {
             Tarefa.VerificaTitulo(titulo);
-            return new Tarefa(titulo, descricao, status, dataConclusao);
+            return new Tarefa(codigo, titulo, descricao, status, dataConclusao);
         }
 
         private void Validacao()

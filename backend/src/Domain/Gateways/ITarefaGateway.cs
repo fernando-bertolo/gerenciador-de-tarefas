@@ -5,5 +5,6 @@ namespace backend.src.Domain.Gateways
     public interface ITarefaGateway
     {
         Tarefa CriarTarefa(Tarefa tarefa);
+        Task<List<Tarefa>> ListarTarefas();
     }
 }
