@@ -1,27 +1,29 @@
+using backend.src.Application.usecases.criar;
+using backend.src.WebApi.DTOs;
+using backend.src.WebApi.Mappers;
 using Microsoft.AspNetCore.Mvc;
 
 namespace backend.src.WebApi.Controllers
 {
-    [ApiController] // Indica que é uma API Controller
-    [Route("api/[controller]")] // Rota base: api/hello
+    [ApiController]
+    [Route("api/[controller]")]
     public class TarefaController : ControllerBase
     {
-        [HttpGet] // GET api/hello
-        public IActionResult GetHello()
+        private readonly ICriarTarefaUseCase _criarTarefaUseCase;
+
+        public TarefaController(ICriarTarefaUseCase criarTarefaUseCase)
         {
-            return Ok("Hello World!");
+            _criarTarefaUseCase = criarTarefaUseCase;
         }
 
-        [HttpGet("greet/{name}")] // GET api/hello/greet/fernando
-        public IActionResult Greet(string name)
-        {
-            return Ok($"Hello, {name}!");
-        }
 
-        [HttpPost] // POST api/hello
-        public IActionResult PostHello([FromBody] string message)
+        [HttpPost]
+        public IActionResult CriarTarefa(
+            [FromBody] CriaTarefaDTO tarefaDTO
+        )
         {
-            return Ok($"Received: {message}");
+            this._criarTarefaUseCase.Execute(TarefaMapper.ToCriarTarefaInput(tarefaDTO));
+            return Ok(tarefaDTO);
         }
     }
 }

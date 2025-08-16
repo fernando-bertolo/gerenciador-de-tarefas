@@ -1,0 +1,26 @@
+using backend.src.Application.usecases.criar;
+using backend.src.Domain.Entities;
+using backend.src.Domain.Enums;
+using backend.src.WebApi.DTOs;
+
+namespace backend.src.WebApi.Mappers
+{
+    public static class TarefaMapper
+    {
+        public static CriaTarefaDTO ToDTO(this Tarefa tarefa)
+        {
+            return new CriaTarefaDTO();
+        }
+
+        public static CriarTarefaInput ToCriarTarefaInput(CriaTarefaDTO tarefaDTO)
+        {
+            return new CriarTarefaInput()
+            {
+                Titulo = tarefaDTO.Titulo,
+                Descricao = tarefaDTO.Descricao,
+                Status = StatusTarefa.Pendente,
+                DataConclusao = tarefaDTO.DataConclusao
+            };
+        }
+    }
+}

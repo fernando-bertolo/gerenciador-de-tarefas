@@ -22,5 +22,22 @@ namespace backend.src.Infrastructure.Persistence.Entities
         public DateTime? DataConclusao { get; set; }
 
         public StatusTarefa Status { get; set; } = StatusTarefa.Pendente;
+
+        public TarefaEntity(
+            int Id,
+            string Titulo,
+            string? Descricao,
+            DateTime DataCriacao,
+            DateTime? DataConclusao,
+            StatusTarefa Status
+            )
+        {
+            this.Id = Id;
+            this.Titulo = Titulo;
+            this.Descricao = Descricao;
+            this.DataCriacao = DataCriacao;
+            this.DataConclusao = DataConclusao;
+            this.Status = Status;
+        }
     }
 }
