@@ -16,6 +16,7 @@ builder.Services.AddDbContext<AppDbContext>(options =>
 
 builder.Services.AddControllers(options =>
 {
+    options.Filters.Add<ApiResponseFilter>();
     options.Filters.Add<GlobalExceptionFilter>();
 });
 

@@ -15,7 +15,9 @@ public class GlobalExceptionFilter : IExceptionFilter
 
         var response = new
         {
-            Message = context.Exception.Message
+            message = context.Exception.Message,
+            statusCode = statusCode,
+            error = true
         };
 
         context.Result = new ObjectResult(response)
