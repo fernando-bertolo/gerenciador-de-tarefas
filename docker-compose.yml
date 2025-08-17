@@ -13,6 +13,22 @@ services:
       - project-network
     volumes:
       - postgres_data:/var/lib/postgresql/data
+  
+  backend:
+    build:
+      context: .
+      dockerfile: backend/Dockerfile
+    container_name: backend_task_manager
+    restart: always
+    ports:
+      - "5228:5228"
+    environment:
+      ConnectionStrings__DefaultConnection: "Host=postgres;Port=5432;Database=task-manager-db;Username=postgres;Password=postgres"
+      ASPNETCORE_URLS: "http://0.0.0.0:5228"
+    depends_on:
+      - postgres
+    networks:
+      - project-network
 
 volumes:
   postgres_data:

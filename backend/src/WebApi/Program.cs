@@ -18,6 +18,7 @@ builder.Services.AddControllers(options =>
 {
     options.Filters.Add<GlobalExceptionFilter>();
 });
+
 builder.Services.AddScoped<ICriarTarefaUseCase, CriarTarefaUseCaseImpl>();
 builder.Services.AddScoped<IListarTarefasUseCase, ListarTarefasUseCaseImpl>();
 builder.Services.AddScoped<IDeletarTarefaPorIdUseCase, DeletarTarefaPorIdUseCaseImpl>();

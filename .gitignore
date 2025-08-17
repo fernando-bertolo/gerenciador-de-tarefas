@@ -50,3 +50,6 @@ Desktop.ini
 *.backup
 *.swp
 *.tmp
+
+
+.env
