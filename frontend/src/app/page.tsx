@@ -1,232 +1,109 @@
 "use client";
-
 import { useState } from "react";
-import { useForm, Controller, SubmitHandler } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
-import * as z from "zod";
-import { Check, Trash, Plus, X } from "lucide-react";
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-
-enum Status {
-  Pendente = "Pendente",
-  EmProgresso = "EmProgresso",
-  Concluida = "Concluida",
-}
-
-const tarefaSchema = z.object({
-  titulo: z.string().min(1, "O título é obrigatório"),
-  descricao: z.string().optional(),
-  status: z.nativeEnum(Status),
-  dataConclusao: z.string().optional(),
-});
-
-type TarefaForm = z.infer<typeof tarefaSchema>;
-
-interface Tarefa extends TarefaForm {
-  codigo: number;
-}
+import { useTarefas } from "../hooks/useTarefas";
+import { Status, Tarefa } from "../types/tarefaTypes";
+import { TarefaModal } from "../components/TarefaModal";
+import { Check, Trash, Plus, Edit } from "lucide-react";
+import { TarefaForm, tarefaSchema } from "@/schemas/tarefaSchema";
+import { Controller, useForm } from "react-hook-form";
 
 export default function Home() {
-  const queryClient = useQueryClient();
+  const { tarefas, addTarefa, editTarefa, deleteTarefa, updateStatusTarefa } = useTarefas();
   const [modalOpen, setModalOpen] = useState(false);
-  const [editTarefa, setEditTarefa] = useState<Tarefa | null>(null);
+  const [editData, setEditData] = useState<Tarefa | null>(null);
 
-  const {
-    register,
-    handleSubmit,
-    reset,
-    control,
-    formState: { errors },
-  } = useForm<TarefaForm>({
-    resolver: zodResolver(tarefaSchema),
-    defaultValues: {
-      titulo: "",
-      descricao: "",
-      status: Status.Pendente,
-    },
-  });
+  const { control } = useForm<TarefaForm>();
 
-  const { data: tarefas = [] } = useQuery<Tarefa[]>({
-    queryKey: ["tarefas"],
-    queryFn: async () => {
-      const res = await fetch("http://localhost:5228/api/tarefa");
-      const result = await res.json();
-      return result.data;
-    },
-  });
-
-  const addMutation = useMutation({
-    mutationFn: (nova: TarefaForm) =>
-      fetch("http://localhost:5228/api/tarefa", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(nova),
-      }),
-    onSuccess: () => {
-      queryClient.invalidateQueries(["tarefas"]);
-      setModalOpen(false);
-      reset();
-    },
-  });
-
-  const editMutation = useMutation({
-    mutationFn: ({ id, dados }: { id: number; dados: Partial<TarefaForm> }) =>
-      fetch(`http://localhost:5228/api/tarefa/${id}`, {
-        method: "PUT",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(dados),
-      }),
-    onSuccess: () => {
-      queryClient.invalidateQueries(["tarefas"]);
-      setModalOpen(false);
-      setEditTarefa(null);
-    },
-  });
-
-  const deleteMutation = useMutation({
-    mutationFn: ({ id }: { id: number }) =>
-      fetch(`http://localhost:5228/api/tarefa/${id}`, {
-        method: "DELETE",
-        headers: { "Content-Type": "application/json" },
-      }),
-    onSuccess: () => {
-      queryClient.invalidateQueries(["tarefas"]);
-      setModalOpen(false);
-      setEditTarefa(null);
-    },
-  });
-
-  const onSubmit: SubmitHandler<TarefaForm> = (data) => {
-    if (editTarefa) {
-      editMutation.mutate({ id: editTarefa.codigo, dados: data });
+  const handleSave = (data: TarefaForm) => {
+    console.log(data);
+    if (editData) {
+      editTarefa.mutate({ id: editData.codigo, dados: data });
     } else {
-      addMutation.mutate(data);
+      addTarefa.mutate(data);
     }
-  };
-
-  const openEditModal = (tarefa: Tarefa) => {
-    setEditTarefa(tarefa);
-    reset(tarefa);
-    setModalOpen(true);
-  };
-
-  const openAddModal = () => {
-    setEditTarefa(null);
-    reset();
-    setModalOpen(true);
+    setModalOpen(false);
+    setEditData(null);
   };
 
   return (
-    <div className="min-h-screen bg-gray-50 flex flex-col items-center p-6">
-      <h1 className="text-4xl font-bold mb-6 text-gray-800">Tarefas</h1>
+    <div className="p-6 flex flex-col items-center">
+      <h1 className="text-3xl font-bold mb-4">Tarefas</h1>
 
       <button
-        onClick={openAddModal}
-        className="flex items-center gap-2 bg-blue-600 text-white px-5 py-3 rounded-full shadow hover:bg-blue-700 transition mb-6"
+        onClick={() => { setModalOpen(true); setEditData(null); }}
+        className="bg-blue-600 text-white px-4 py-2 rounded-full flex items-center gap-2 mb-6"
       >
         <Plus className="w-5 h-5" /> Nova Tarefa
       </button>
 
-      <ul className="w-full max-w-2xl grid grid-cols-1 gap-4">
-        {tarefas.map((tarefa, index) => (
-          <li
-            key={index}
-            className="bg-white p-4 rounded-xl shadow hover:shadow-md transition flex justify-between items-center"
+      <ul className="w-full max-w-2xl grid gap-4">
+        {tarefas.map(tarefa => (
+          <li 
+            key={tarefa.codigo} 
+            className={`bg-white p-4 rounded-xl shadow flex justify-between items-start border-l-4 ${
+              tarefa.status === "Concluida" ? "border-green-500" : "border-gray-200"
+            }`}
           >
-            <div className="flex flex-col">
-              <span className="text-lg font-semibold">{tarefa.titulo}</span>
+            <div>
+              <p className="font-semibold">{tarefa.titulo}</p>
               {tarefa.descricao && (
-                <span className="text-gray-500 text-sm mt-1">{tarefa.descricao}</span>
+                <p className="text-sm text-gray-500">{tarefa.descricao}</p>
               )}
 
-              {tarefa.dataConclusao ? (
-                <span className="text-xs mt-1 px-2 py-1 bg-gray-200 rounded-full w-max">
-                  Concluído em: {tarefa.dataConclusao}
-                </span>
+              {tarefa.status === "Concluida" ? (
+                <p className="text-xs bg-green-100 text-green-800 rounded-full px-2 py-1 w-max mt-2">
+                  {tarefa.dataConclusao 
+                    ? `Concluído em: ${tarefa.dataConclusao}` 
+                    : "Concluído"}
+                </p>
               ) : (
-                <span className="text-xs mt-1 px-2 py-1 bg-gray-200 rounded-full w-max">
-                  {tarefa.status}
-                </span>
+                <Controller
+                  name="status"
+                  control={control}
+                  render={({ field }) => (
+                    <select 
+                      {...field} 
+                      value={tarefa.status}
+                      className="border rounded p-2 text-sm mt-2"
+                      onChange={(e) => {
+                        field.onChange(e.target.value as Status);
+                        updateStatusTarefa.mutate({ id: tarefa.codigo, status: e.target.value as Status });
+                      }}
+                    >
+                      {Object.values(Status).map(s => (
+                        <option key={s} value={s}>{s}</option>
+                      ))}
+                    </select>
+                  )}
+                />
               )}
             </div>
 
             <div className="flex gap-3">
-              <button
-                onClick={() => openEditModal(tarefa)}
-                className="text-green-500 hover:text-green-700 transition"
+              <button 
+                onClick={() => { setEditData(tarefa); setModalOpen(true); }} 
+                className="text-green-600 hover:text-green-800"
               >
-                <Check className="w-5 h-5" />
+                <Edit />
               </button>
-              <button
-                onClick={() =>
-                  deleteMutation.mutate({ id: tarefa.codigo })
-                }
-                className="text-red-500 hover:text-red-700 transition"
+              <button 
+                onClick={() => deleteTarefa.mutate(tarefa.codigo)} 
+                className="text-red-600 hover:text-red-800"
               >
-                <Trash className="w-5 h-5" />
+                <Trash />
               </button>
             </div>
           </li>
         ))}
       </ul>
 
-      {/* Modal */}
+
       {modalOpen && (
-        <div className="backdrop-blur-xs backdrop-grayscale backdrop-brightness-80 fixed inset-0 z-50 flex items-center justify-center">
-          <div className="bg-white rounded-2xl w-full max-w-md p-6 relative">
-            <button
-              onClick={() => setModalOpen(false)}
-              className="absolute top-4 right-4 text-gray-500 hover:text-gray-800 transition"
-            >
-              <X className="w-5 h-5" />
-            </button>
-
-            <h2 className="text-2xl font-semibold mb-4">
-              {editTarefa ? "Editar Tarefa" : "Nova Tarefa"}
-            </h2>
-
-            <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col gap-4">
-              <input
-                {...register("titulo")}
-                placeholder="Título"
-                className="px-4 py-2 rounded-xl border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-400 transition"
-              />
-              {errors.titulo && (
-                <span className="text-red-500 text-sm">{errors.titulo.message}</span>
-              )}
-
-              <textarea
-                {...register("descricao")}
-                placeholder="Descrição (opcional)"
-                className="px-4 py-2 rounded-xl border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-400 transition"
-              />
-
-              <Controller
-                control={control}
-                name="status"
-                render={({ field }) => (
-                  <select
-                    {...field}
-                    className="px-4 py-2 rounded-xl border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-400 transition"
-                  >
-                    {Object.values(Status).map((s) => (
-                      <option key={s} value={s}>
-                        {s}
-                      </option>
-                    ))}
-                  </select>
-                )}
-              />
-
-              <button
-                type="submit"
-                className="bg-blue-600 text-white px-4 py-2 rounded-xl hover:bg-blue-700 transition"
-              >
-                {editTarefa ? "Salvar Alterações" : "Adicionar Tarefa"}
-              </button>
-            </form>
-          </div>
-        </div>
+        <TarefaModal
+          defaultValues={editData ?? undefined}
+          onSubmit={handleSave}
+          onClose={() => setModalOpen(false)}
+        />
       )}
     </div>
   );
