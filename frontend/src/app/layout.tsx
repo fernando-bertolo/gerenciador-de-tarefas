@@ -1,4 +1,11 @@
+"use client";
+
+
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import "./globals.css";
+import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
+
+const queryClient = new QueryClient();
 
 export default function RootLayout({
   children,
@@ -7,7 +14,9 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="pt-br">
-      <body>{children}</body>
+      <QueryClientProvider client={queryClient}>
+        <body>{children}</body>
+      </QueryClientProvider>
     </html>
   );
 }

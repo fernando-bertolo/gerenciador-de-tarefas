@@ -20,6 +20,19 @@ builder.Services.AddControllers(options =>
     options.Filters.Add<GlobalExceptionFilter>();
 });
 
+var EnableFrontend = "_enableFrontend";
+
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy(name: EnableFrontend,
+    policy =>
+    {
+        policy.WithOrigins("http://localhost:3000")
+            .AllowAnyHeader()
+            .AllowAnyMethod();
+    });
+});
+
 builder.Services.AddScoped<ICriarTarefaUseCase, CriarTarefaUseCaseImpl>();
 builder.Services.AddScoped<IListarTarefasUseCase, ListarTarefasUseCaseImpl>();
 builder.Services.AddScoped<IDeletarTarefaPorIdUseCase, DeletarTarefaPorIdUseCaseImpl>();
@@ -35,6 +48,7 @@ using (var scope = app.Services.CreateScope())
     dbContext.Database.Migrate();
 }
 
+app.UseCors(EnableFrontend);
 app.MapControllers();
 
 app.Run();
