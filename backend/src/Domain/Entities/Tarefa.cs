@@ -26,7 +26,7 @@ namespace backend.src.Domain.Entities
             this.Descricao = descricao;
             this.Status = status;
             this.DataCriacao = dataCriacao ?? DateTime.UtcNow;
-            this.DataConclusao = dataConclusao;
+            this.DataConclusao = dataConclusao ?? (status == StatusTarefa.Concluida ? DateTime.UtcNow : null);
 
             this.Validacao();
         }

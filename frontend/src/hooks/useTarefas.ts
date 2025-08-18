@@ -2,13 +2,14 @@ import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { tarefaService } from "../services/tarefaService";
 import { Status, Tarefa } from "../types/tarefaTypes";
 import { TarefaForm } from "@/schemas/tarefaSchema";
+import { Filter } from "@/types/filterTypes";
 
-export function useTarefas() {
+export function useTarefas(filter?: Filter) {
   const queryClient = useQueryClient();
 
   const { data: tarefas = [] } = useQuery<Tarefa[]>({
-    queryKey: ["tarefas"],
-    queryFn: tarefaService.getAll,
+    queryKey: ["tarefas", filter],
+    queryFn: () => tarefaService.getAll(filter || {search: "", status: Status.Todos}),
   });
 
   const addTarefa = useMutation({
@@ -17,7 +18,7 @@ export function useTarefas() {
   });
 
   const editTarefa = useMutation({
-    mutationFn: ({ id, dados }: { id: number; dados: Partial<TarefaForm> }) =>
+    mutationFn: ({ id, dados }: { id: number; dados: TarefaForm }) =>
     tarefaService.update(id, dados),
     onSuccess: () => queryClient.invalidateQueries(["tarefas"]),
   });

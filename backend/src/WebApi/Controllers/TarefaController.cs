@@ -13,7 +13,7 @@ using Name;
 namespace backend.src.WebApi.Controllers
 {
     [ApiController]
-    [Route("api/[controller]")]
+    [Route("api/v1/[controller]")]
     public class TarefaController : ControllerBase
     {
         private readonly ICriarTarefaUseCase _criarTarefaUseCase;
@@ -39,19 +39,21 @@ namespace backend.src.WebApi.Controllers
 
 
         [HttpPost]
-        public IActionResult CriarTarefa(
+        public async Task<IActionResult> CriarTarefa(
             [FromBody] CriaTarefaDTO tarefaDTO
         )
         {
-            this._criarTarefaUseCase.Execute(TarefaMapper.ToCriarTarefaInput(tarefaDTO));
+            await this._criarTarefaUseCase.Execute(TarefaMapper.ToCriarTarefaInput(tarefaDTO));
             return Created();
         }
 
         [HttpGet]
-        public IActionResult ListarTarefas()
+        public async Task<IActionResult> ListarTarefas(
+            [FromQuery] FiltroListagemDTO filtro
+        )
         {
-            var tarefas = this._listarTarefasUseCase.Execute();
-            return Ok(TarefaPresenter.ToTarefaResponseDTO(tarefas.Result));
+            var tarefas = await this._listarTarefasUseCase.Execute(TarefaMapper.ToFiltroListagemInput(filtro));
+            return Ok(TarefaPresenter.ToTarefaResponseDTO(tarefas));
         }
 
 
@@ -62,7 +64,7 @@ namespace backend.src.WebApi.Controllers
         )
         {
             await this._atualizarStatusUseCase.Execute(id, TarefaMapper.ToAtualizarStatusInput(dto));
-            return Ok();
+            return Ok("Status da tarefa atualizado com sucesso");
         }
 
         [HttpPut("{id}")]
@@ -71,7 +73,7 @@ namespace backend.src.WebApi.Controllers
             [FromBody] AtualizarTarefaDTO dto)
         {
             await this._atualizarTarefaUseCase.Execute(id, TarefaMapper.ToAtualizarTarefaInput(dto));
-            return Ok();
+            return Ok("Tarefa atualizada com sucesso");
         }
 
 
@@ -79,7 +81,7 @@ namespace backend.src.WebApi.Controllers
         public async Task<IActionResult> RemoverTarefaPorId(int id)
         {
             await this._deletarTarefaPorIdUseCase.Execute(id);
-            return Ok();
+            return Ok("Tarefa removida com sucesso");
         }
     }
 }

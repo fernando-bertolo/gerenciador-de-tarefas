@@ -12,9 +12,9 @@ namespace backend.src.Application.usecases.criar
             _tarefaGateway = tarefaGateway;
         }
 
-        public void Execute(CriarTarefaInput input)
+        public async Task Execute(CriarTarefaInput input)
         {
-            this._tarefaGateway.CriarTarefa(Tarefa.Criar(null, input.Titulo, input.Descricao, input.Status, input.DataConclusao));
+            await this._tarefaGateway.CriarTarefa(Tarefa.Criar(null, input.Titulo, input.Descricao, input.Status, input.DataConclusao));
         }
     }
 }

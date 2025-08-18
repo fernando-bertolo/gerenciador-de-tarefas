@@ -2,6 +2,7 @@ export enum Status {
   Pendente = "Pendente",
   EmProgresso = "EmProgresso",
   Concluida = "Concluida",
+  Todos = "",
 }
 
 export interface Tarefa {

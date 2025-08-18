@@ -28,7 +28,8 @@ namespace backend.src.Application.usecases.deletar
                 tarefaEncontrada.Titulo,
                 tarefaEncontrada.Descricao,
                 tarefaEncontrada.Status,
-                tarefaEncontrada.DataConclusao
+                tarefaEncontrada.DataConclusao,
+                tarefaEncontrada.DataCriacao
             ));
         }
     }

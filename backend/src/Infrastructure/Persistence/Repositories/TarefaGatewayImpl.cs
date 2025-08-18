@@ -1,4 +1,6 @@
+using backend.src.Application.usecases.listar;
 using backend.src.Domain.Entities;
+using backend.src.Domain.Enums;
 using backend.src.Domain.Gateways;
 using backend.src.Infrastructure.Persistence.Entities;
 using Microsoft.EntityFrameworkCore;
@@ -30,11 +32,30 @@ namespace backend.src.Infrastructure.Persistence.Repositories
             return tarefa;
         }
 
-        public async Task<List<Tarefa>> ListarTarefas()
+        public async Task<List<Tarefa>> ListarTarefas(FiltroListagemInput filtro)
         {
-            return await this._context.Tarefas
-                .AsNoTracking()
-                .Select(e => Tarefa.Criar(e.Id, e.Titulo, e.Descricao, e.Status, e.DataConclusao, e.DataCriacao)).ToListAsync();
+            var query = this._context.Tarefas.AsNoTracking().AsQueryable();
+
+            if (filtro.Status != null)
+            {
+                query = query.Where(e => e.Status == filtro.Status);
+            }
+
+            if (!string.IsNullOrWhiteSpace(filtro.Search))
+            {
+                query = query.Where(e => e.Titulo.Contains(filtro.Search));
+            }
+
+            return await query
+                .Select(e => Tarefa.Criar(
+                    e.Id,
+                    e.Titulo,
+                    e.Descricao,
+                    e.Status,
+                    e.DataConclusao,
+                    e.DataCriacao
+                ))
+                .ToListAsync();
         }
 
 

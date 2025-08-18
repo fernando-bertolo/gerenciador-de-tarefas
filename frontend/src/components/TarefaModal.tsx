@@ -20,7 +20,6 @@ export function TarefaModal({ defaultValues, onSubmit, onClose }: Props) {
 
   useEffect(() => {
     if(defaultValues) {
-      console.log('resetando');
       reset(defaultValues);
     }
   }, [defaultValues, reset])
@@ -41,15 +40,16 @@ export function TarefaModal({ defaultValues, onSubmit, onClose }: Props) {
           {errors.titulo && <span className="text-red-500">{errors.titulo.message}</span>}
 
           <textarea {...register("descricao")} placeholder="Descrição" className="border rounded p-2" />
+          {errors.descricao && <span className="text-red-500">{errors.descricao.message}</span>}
 
           <Controller
             name="status"
             control={control}
             render={({ field }) => (
               <select {...field} className="border rounded p-2">
-                {Object.values(Status).map(s => (
-                  <option key={s} value={s}>{s}</option>
-                ))}
+                <option value="Pendente">Pendente</option>
+                <option value="EmProgresso">Em Progresso</option>
+                <option value="Concluida">Concluída</option>
               </select>
             )}
           />

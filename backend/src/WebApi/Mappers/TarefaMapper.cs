@@ -1,4 +1,5 @@
 using backend.src.Application.usecases.criar;
+using backend.src.Application.usecases.listar;
 using backend.src.Application.UseCases.Atualizar;
 using backend.src.Application.UseCases.Atualizar.Status;
 using backend.src.Application.UseCases.Atualizar.Tarefa;
@@ -11,10 +12,6 @@ namespace backend.src.WebApi.Mappers
 {
     public static class TarefaMapper
     {
-        public static CriaTarefaDTO ToDTO(this Tarefa tarefa)
-        {
-            return new CriaTarefaDTO();
-        }
 
         public static CriarTarefaInput ToCriarTarefaInput(CriaTarefaDTO tarefaDTO)
         {
@@ -27,15 +24,15 @@ namespace backend.src.WebApi.Mappers
             };
         }
 
-        public static AtualizarStatusInput ToAtualizarStatusInput(this AtualizarStatusDTO dto)
+        public static AtualizarStatusInput ToAtualizarStatusInput(AtualizarStatusDTO dto)
         {
             return new AtualizarStatusInput()
             {
                 Status = (StatusTarefa)dto.Status,
             };
         }
-        
-        public static AtualizarTarefaInput ToAtualizarTarefaInput(this AtualizarTarefaDTO dto)
+
+        public static AtualizarTarefaInput ToAtualizarTarefaInput(AtualizarTarefaDTO dto)
         {
             return new AtualizarTarefaInput()
             {
@@ -44,5 +41,25 @@ namespace backend.src.WebApi.Mappers
                 Status = (StatusTarefa)dto.Status,
             };
         }
+
+        public static FiltroListagemInput ToFiltroListagemInput(FiltroListagemDTO dto)
+        {
+            if (dto.Status == null)
+            {
+                return new FiltroListagemInput()
+                {
+                    Status =  null,
+                    Search = dto.Search ?? null
+                };
+            }
+
+            return new FiltroListagemInput()
+            {
+                Status = (StatusTarefa) dto.Status,
+                Search = dto.Search ?? null
+            };
+        }
+
+
     }
 }

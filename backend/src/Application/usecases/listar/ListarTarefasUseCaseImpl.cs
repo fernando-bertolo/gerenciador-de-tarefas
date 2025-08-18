@@ -12,9 +12,9 @@ namespace backend.src.Application.usecases.listar
             _tarefaGateway = tarefaGateway;
         }
         
-        public async Task<List<ListarTarefasOutput>> Execute()
+        public async Task<List<ListarTarefasOutput>> Execute(FiltroListagemInput filtro)
         {
-            var tarefas = await _tarefaGateway.ListarTarefas();
+            var tarefas = await _tarefaGateway.ListarTarefas(filtro);
 
             return tarefas.Select(t => new ListarTarefasOutput
             {
