@@ -6,7 +6,7 @@ import { toast } from "sonner";
 const API_URL = `${process.env.NEXT_PUBLIC_API_URL}/api/v1/tarefa`;
 
 export const tarefaService = {
-  getAll: async (data: Filter): Promise<Tarefa[] | undefined> => {
+  getAll: async (data: Filter): Promise<Tarefa[]> => {
     try {
       const url = `${API_URL}?search=${data.search}&status=${data.status}`;
       const res = await fetch(url);
@@ -14,12 +14,13 @@ export const tarefaService = {
 
       if (!res.ok) {
         toast.error(result?.error || "Erro ao buscar tarefas");
-        return;
+        return [];
       }
 
       return result.data;
     } catch (error) {
       toast.error("Erro de conexão ao buscar tarefas");
+      return [];
     }
   },
 

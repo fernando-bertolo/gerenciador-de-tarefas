@@ -44,7 +44,7 @@ export default function Home() {
         <Filters filter={filter} onChangeFilter={setFilter} />
 
         <ul className="flex flex-col gap-4 max-h-30">
-          { tarefas.length > 0 ? tarefas.map(tarefa => (
+          { (tarefas ?? []).length > 0 ? tarefas.map(tarefa => (
             <li 
               key={tarefa.codigo} 
               className={`bg-white p-4 rounded-xl shadow flex justify-between items-start border-l-4 ${
