@@ -45,6 +45,23 @@ gerenciador-de-tarefas/
 ├─ docker-compose.yml
 
 ---
+## Variaveis de ambiente
+
+É necessário configurar as variaveis de ambiente do .env da raiz do projeto com as configurações do banco
+
+```
+DB_HOST=
+DB_PORT=
+DB_NAME=
+DB_USER=
+DB_PASS=
+```
+
+É necessário também configurar a variavel de ambiente do .env do frontend para conseguir consumir a API
+
+```
+NEXT_PUBLIC_API_URL=
+```
 
 ## 🚀 Rodando o Projeto
 
