@@ -66,25 +66,18 @@ export default function Home() {
                       : "Concluído"}
                   </p>
                 ) : (
-                  <Controller
-                    name="status"
-                    control={control}
-                    render={({ field }) => (
-                      <select 
-                        {...field} 
-                        value={tarefa.status}
-                        className="border rounded p-2 text-sm mt-2"
-                        onChange={(e) => {
-                          field.onChange(e.target.value as Status);
-                          updateStatusTarefa.mutate({ id: tarefa.codigo, status: e.target.value as Status });
-                        }}
-                      >
-                        <option value="Pendente">Pendente</option>
-                        <option value="EmProgresso">Em Progresso</option>
-                        <option value="Concluida">Concluída</option>
-                      </select>
-                    )}
-                  />
+                  <select
+                    value={tarefa.status}
+                    className="border rounded p-2 text-sm mt-2"
+                    onChange={(e) => {
+                      const newStatus = e.target.value as Status;
+                      updateStatusTarefa.mutate({ id: tarefa.codigo, status: newStatus });
+                    }}
+                  >
+                    <option value="Pendente">Pendente</option>
+                    <option value="EmProgresso">Em Progresso</option>
+                    <option value="Concluida">Concluída</option>
+                  </select>
                 )}
               </div>
 
