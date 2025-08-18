@@ -11,6 +11,8 @@ using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
 
+builder.WebHost.UseUrls("http://0.0.0.0:5228");
+
 builder.Services.AddDbContext<AppDbContext>(options =>
     options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection")));
 
@@ -20,14 +22,16 @@ builder.Services.AddControllers(options =>
     options.Filters.Add<GlobalExceptionFilter>();
 });
 
-var EnableFrontend = "_enableFrontend";
+builder.Services.AddEndpointsApiExplorer();
+builder.Services.AddSwaggerGen();
 
+var EnableFrontend = "_enableFrontend";
 builder.Services.AddCors(options =>
 {
     options.AddPolicy(name: EnableFrontend,
     policy =>
     {
-        policy.WithOrigins("http://localhost:3000")
+        policy.WithOrigins("http://localhost:3000", "http://host.docker.internal:3000")
             .AllowAnyHeader()
             .AllowAnyMethod();
     });
@@ -49,6 +53,15 @@ using (var scope = app.Services.CreateScope())
 }
 
 app.UseCors(EnableFrontend);
+app.UseRouting();
+
+app.UseSwagger();
+app.UseSwaggerUI(c =>
+{
+    c.SwaggerEndpoint("/swagger/v1/swagger.json", "Task Manager API V1");
+    c.RoutePrefix = string.Empty;
+});
+
 app.MapControllers();
 
 app.Run();
