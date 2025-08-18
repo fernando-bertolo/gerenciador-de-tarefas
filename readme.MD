@@ -26,25 +26,6 @@ Um sistema de **gerenciamento de tarefas** com **frontend em Next.js** e **backe
 - **Docker** (containers para frontend, backend e banco)
 - **Docker Compose**
 
----
-
-## 📦 Estrutura do Projeto
-
-gerenciador-de-tarefas/
-│
-├─ backend/ # Backend C# .NET
-│ ├─ src/
-│ ├─ Dockerfile
-│ └─ ...
-│
-├─ frontend/ # Frontend Next.js
-│ ├─ src/
-│ ├─ Dockerfile
-│ └─ ...
-│
-├─ docker-compose.yml
-
----
 ## Variaveis de ambiente
 
 É necessário configurar as variaveis de ambiente do .env da raiz do projeto com as configurações do banco
